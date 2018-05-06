@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import Homepage from './Homepage.vue'
+import Discover from './Discover'
+import Buying from './Buying'
+import Selling from './Selling'
+import User from './User'
 import Home from './Home.vue'
 import Users from './Users.vue'
 
@@ -17,9 +21,24 @@ const routes = [
     component: Home
   },
   {
-    path: "/users/:userId",
+    path: "/discover",
+    name: "discover",
+    component: Discover
+  },
+  {
+    path: "/buying",
+    name: "buying",
+    component: Buying
+  },
+  {
+    path: "/selling",
+    name: "selling",
+    component: Selling
+  },
+  {
+    path: "/user",
     name: "user",
-    component: Users
+    component: User
   },
   {
     path: "/users",
