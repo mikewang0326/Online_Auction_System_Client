@@ -1,10 +1,9 @@
 import Vue from 'vue'
-import Homepage from './Homepage.vue'
+import App from './App.vue'
 import Discover from './Discover'
 import Buying from './Buying'
 import Selling from './Selling'
 import User from './User'
-import Home from './Home.vue'
 import Users from './Users.vue'
 
 import VueRouter from 'vue-router';
@@ -18,7 +17,7 @@ Vue.http.options.emulateJSON = true;
 const routes = [
   {
     path: "/",
-    component: Home
+    component: Discover
   },
   {
     path: "/discover",
@@ -53,7 +52,7 @@ const router = new VueRouter({
 });
 
 new Vue({
-  el: '#homepage',
+  el: '#app',
   router: router,
-  render: h => h(Homepage)
+  render: h => h(App)
 })
