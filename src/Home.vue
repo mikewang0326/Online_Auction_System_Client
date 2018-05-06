@@ -1,8 +1,6 @@
 <template>
   <div>
     <h1>Home Page</h1>
-    <button type = "button" v-on:click="users">
-      Go To Users Page
-    </button>
+    <router-link to="/users">Go to Users</router-link>
   </div>
 </template>
