@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="homepage">
     <router-view></router-view>
     <img src="./assets/logo.png">
     <h1>{{ msg }}</h1>
@@ -22,17 +22,17 @@
 
 <script>
 export default {
-  name: 'app',
+  name: 'homepage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js Homepage'
     }
   }
 }
 </script>
 
 <style>
-#app {
+#homepage {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

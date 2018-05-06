@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './App.vue'
+import Homepage from './Homepage.vue'
 import Home from './Home.vue'
 import Users from './Users.vue'
 
@@ -34,7 +34,7 @@ const router = new VueRouter({
 });
 
 new Vue({
-  el: '#app',
+  el: '#homepage',
   router: router,
-  render: h => h(App)
+  render: h => h(Homepage)
 })
