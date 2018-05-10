@@ -37,6 +37,7 @@
 
 <script>
   import axios from '../axios'
+  const userHelper = require('./UserHelper')
 
   export default {
     name: 'LoginComponent',
@@ -72,8 +73,17 @@
           'email': this.login_info.username_or_email,
           'password': this.login_info.password
         })
-          .then(function (response) {
-            console.log(response);
+          .then((response) => {
+            console.log(response['data']['id']);
+            console.log(response['data']['token']);
+            // if login succeed, save token, and return to user page
+            userHelper.saveLoginStatus(response['data']['id'], response['data']['token']);
+            console.log('user login status is : ' + userHelper.isLogin());
+            if (userHelper.isLogin()) {
+              this.$router.push('/user');
+              console.log('has push to user page');
+            }
+
           })
           .catch(function (error) {
             console.log(error);

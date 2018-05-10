@@ -9,15 +9,15 @@ const instance = axios.create({
 });
 
 axios.interceptors.request.use = instance.interceptors.request.use
-instance.interceptors.request.use(config => {
-	if(localStorage.getItem('token')) {
-		config.headers.Authorization = `token ${localStorage.getItem('token')}`
-			.replace(/(^\")|(\"$)/g, '')
-	}
-	return config
-}, err => {
-	return Promise.reject(err)
-})
+// instance.interceptors.request.use(config => {
+// 	if(localStorage.getItem('token')) {
+// 		config.headers.Authorization = `token ${localStorage.getItem('token')}`
+// 			.replace(/(^\")|(\"$)/g, '')
+// 	}
+// 	return config
+// }, err => {
+// 	return Promise.reject(err)
+// })
 
 // axios拦截响应
 instance.interceptors.response.use(response => {
