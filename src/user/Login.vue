@@ -10,21 +10,21 @@
             <form @submit.prevent="submitLogin" novalidate>
               <div class="form-group has-feedback">
                 <label for="email" class="control-label sr-only">Add your email address.</label>
-                <input ref="txtEmail" type="text" class="form-control" id="email"
+                <input v-model="login_info.username_or_email" type="text" class="form-control" id="email"
                        placeholder="Username or email" autofocus required>
               </div>
               <div class="form-group has-feedback">
                 <label for="password" class="control-label sr-only">Add your password.</label>
-                <input ref="txtPassword" type="password" class="form-control"
+                <input v-model="login_info.password" type="password" class="form-control"
                        id="password" placeholder="Password" >
               </div>
               <div v-if="errorMessage" class="text-center text-danger">{{ errorMessage }}</div>
-              <div class="checkbox">
-                <button class="btn btn-primary pull-right" v-on:click="submitLogin">Sign in</button>
+              <div class="checkbox" >
+                <button class="btn btn-primary pull-right">Sign in</button>
               </div>
             </form>
 
-            <div class="checkbox 2">
+            <div class="checkbox">
               <button class="btn btn-primary pull-left" v-on:click="submitRegister">Sign Up</button>
             </div>
           </div>
@@ -47,6 +47,10 @@
     },
     data() {
       return {
+        login_info: {
+          username_or_email: '',
+          password: ''
+        }
       }
     },
     mounted: function () {
@@ -57,9 +61,7 @@
       },
 
       submitLogin: function () {
-        let email = this.$refs.txtEmail.value.trim()
-        let password = this.$refs.txtPassword.value.trim()
-        alert("username/email is :" + email);
+        alert("username/email is :" + this.login_info.username_or_email);
       },
 
       submitRegister: function () {
