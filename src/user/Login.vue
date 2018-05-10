@@ -52,7 +52,7 @@
     data() {
       return {
         errorMessage:{
-          response: 'Login failed'
+          response: ''
         },
         login_info: {
           username_or_email: 'hixin1@example.com',
@@ -85,8 +85,8 @@
             }
 
           })
-          .catch(function (error) {
-            console.log(error);
+          .catch((error) => {
+            this.errorMessage.response = error.toString();
           });
       },
 
