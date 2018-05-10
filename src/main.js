@@ -3,8 +3,9 @@ import App from './App.vue'
 import Discover from './Discover'
 import Buying from './Buying'
 import Selling from './Selling'
-import User from './User'
-import Users from './Users.vue'
+import User from './user/User'
+import Login from './user/Login'
+import Register from './user/Register'
 
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource'
@@ -40,9 +41,14 @@ const routes = [
     component: User
   },
   {
-    path: "/users",
-    name:"users",
-    component: Users
+    path: "/user/login",
+    name: "login",
+    component: Login
+  },
+  {
+    path: "/user/register",
+    name:"register",
+    component: Register
   },
 ];
 
