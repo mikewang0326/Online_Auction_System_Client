@@ -18,7 +18,7 @@
                 <input v-model="login_info.password" type="password" class="form-control"
                        id="password" placeholder="Password" >
               </div>
-              <div v-if="errorMessage" class="text-center text-danger">{{ errorMessage }}</div>
+              <div v-if="errorMessage.response" class="text-center text-danger">{{ errorMessage.response }}</div>
               <div class="checkbox" >
                 <button class="btn btn-primary pull-right">Sign in</button>
               </div>
@@ -34,22 +34,28 @@
   </div>
 </template>
 
+
 <script>
+  import axios from '../axios'
+
   export default {
     name: 'LoginComponent',
-    props: {
-      errorMessage: {
-        type: String,
-        required: false,
-        default: ''
-      },
-
-    },
+    // props: {
+    //   errorMessage: {
+    //     type: String,
+    //     required: false,
+    //     default: ''
+    //   },
+    //
+    // },
     data() {
       return {
+        errorMessage:{
+          response: 'Login failed'
+        },
         login_info: {
-          username_or_email: '',
-          password: ''
+          username_or_email: 'hixin1@example.com',
+          password: '123321'
         }
       }
     },
@@ -61,7 +67,17 @@
       },
 
       submitLogin: function () {
-        alert("username/email is :" + this.login_info.username_or_email);
+
+        axios.post('/users/login', {
+          'email': this.login_info.username_or_email,
+          'password': this.login_info.password
+        })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       },
 
       submitRegister: function () {
