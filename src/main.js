@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Discover from './Discover'
+import Auction from './Auction'
 import Buying from './Buying'
 import Selling from './Selling'
 import User from './user/User'
@@ -24,6 +25,11 @@ const routes = [
     path: "/discover",
     name: "discover",
     component: Discover
+  },
+  {
+    path: "/auction",
+    name:"auction",
+    component: Auction
   },
   {
     path: "/buying",
