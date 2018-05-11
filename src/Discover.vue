@@ -1,58 +1,113 @@
 <template>
   <div id="discover">
     <h1>Discover Page</h1>
-    <select v-model="selected">
-      <option v-for="option in options" v-bind:value="option.value">
-        {{ option.text }}
+    <span>Current Category: {{ search_parameter.category_select }}</span>
+    <select v-model="search_parameter.category_select">
+      <option v-for="category in categories" v-bind:value="category.categoryId">
+        {{ category.categoryTitle }}
       </option>
     </select>
-    <span>Selected: {{ selected }}</span>
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search for...">
+      <input v-model="search_parameter.q" type="text" class="form-control" placeholder="Search for...">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button">搜索</button>
+        <button class="btn btn-default" type="button" v-on:click="search">搜索</button>
       </span>
     </div>
 
     <div id="auctions">
-      <table>
-        <tr v-for="auction in auctions">
-          <td>{{ auction.name }}</td>
-          <td><router-link :to="{ name :'auction', params:{ auction_id: auction.auction_id }}"> Go to Auction Page </router-link></td>
-        </tr>
-      </table>
+      <ol v-for="auction in auctions">
+        <li>
+          <div>
+            <td>{{ auction.title }}</td>
+            <td><router-link :to="{ name :'auction', params:{ auction_id: auction.id }}"> Go to Auction Page </router-link></td>
+          </div>
+        </li>
+      </ol>
     </div>
 
   </div>
 </template>
 
 <script>
+  const validator = require('validator');
   export default {
     data () {
       return {
         error:"",
         errorFlag: false,
         users:[],
-        selected: 0,
-        options:[
-          {text:'Category  ', value:0, },
-          {text:'Category 1', value:1, },
-          {text:'Category 2', value:2, },
-          {text:'Category 3', value:3, },
+        search_parameter:{
+          category_select: -1,
+          q:''
+        },
+        default_category:{categoryId:-1, categoryTitle:"None", categoryDescription:''},
+        categories:[
+          {categoryId:1, categoryTitle:"", categoryDescription:''},
         ],
         auctions:[
-          {name:'auction 1', auction_id:1},
-          {name:'auction 2', auction_id:2},
-          {name:'auction 3', auction_id:3},
+          {
+            id:1,
+            categoryTitle:'apparel',
+            categoryId:1,
+            title:"Super cape",
+            reservePrice:10,
+            startDateTime:1518606000000,
+            endDateTime:1520938800000,
+            currentBid:0.01
+          },
         ],
       }
     },
 
     mounted: function () {
-      // this.getUsers()
+      this.getCategories();
     },
 
     methods: {
+      getCategories: function () {
+        this.$http.get("http://localhost:4941/api/v1/categories")
+          .then(function (response) {
+            console.log("get response")
+            console.log(response)
+            this.categories = response['data'];
+            this.categories.push(this.default_category);
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          })
+      },
+
+      search: function () {
+        console.log(this.getSearchParameters());
+        this.$http.get("http://localhost:4941/api/v1/auctions", this.getSearchParameters())
+          .then((response) => {
+            console.log("get response")
+            console.log(response)
+            this.auctions = response['data'];
+          }, function (error) {
+            this.error = error;
+            this.errorFlag = true;
+          })
+      },
+
+      getSearchParameters: function() {
+
+        var q = this.search_parameter.q;
+        var categoryId = this.search_parameter.category_select;
+
+        var params = {}
+        if(undefined != q && !validator.isEmpty(q.toString())) {
+           params.q = q;
+        }
+
+        if(undefined != categoryId && validator.isNumeric(categoryId.toString()) && parseInt(categoryId) > 0) {
+          params['category-id'] = categoryId;
+        }
+
+        return {params}
+
+      },
+
       getUsers: function () {
         this.$http.get("http://localhost:4941/api/v1/users")
           .then(function (response) {
