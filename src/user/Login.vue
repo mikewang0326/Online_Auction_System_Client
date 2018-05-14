@@ -1,22 +1,21 @@
 <template>
   <div class="container">
-    <div class="row">
       <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
         <div class="panel panel-primary">
           <div class="panel-heading">
             <h3 class="panel-title">Login</h3>
           </div>
           <div class="panel-body">
-            <form @submit.prevent="submitLogin" novalidate>
+            <form @submit.prevent="submitLogin">
               <div class="form-group has-feedback">
-                <label for="email" class="control-label sr-only">Add your email address.</label>
+                <label class="cols-sm-2 control-label">Username or email</label>
                 <input v-model="login_info.username_or_email" type="text" class="form-control" id="email"
                        placeholder="Username or email" autofocus required>
               </div>
               <div class="form-group has-feedback">
-                <label for="password" class="control-label sr-only">Add your password.</label>
+                <label class="cols-sm-2 control-label">Password</label>
                 <input v-model="login_info.password" type="password" class="form-control"
-                       id="password" placeholder="Password" >
+                       id="password" placeholder="Password" required>
               </div>
               <div v-if="errorMessage.response" class="text-center text-danger">{{ errorMessage.response }}</div>
               <div class="checkbox" >
@@ -30,7 +29,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
