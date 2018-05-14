@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  const userHelper = require('./UserHelper')
+  const userHelper = require('../../utils/UserHelper')
   export default {
     data () {
       return {

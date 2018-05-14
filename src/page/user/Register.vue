@@ -54,8 +54,8 @@
 </template>
 
 <script>
-  import axios from '../axios';
-  const responseHelper = require('./RegisterResponseHelper');
+  import axios from '../../axios';
+  const responseHelper = require('../../data/user/RegisterResponseHelper');
 
   export default {
     name: 'RegisterComponent',

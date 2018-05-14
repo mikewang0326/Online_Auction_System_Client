@@ -34,9 +34,9 @@
 
 
 <script>
-  import axios from '../axios'
-  const userHelper = require('./UserHelper')
-  const responseHelper = require('./LoginResponseHelper');
+  import axios from '../../axios'
+  const userHelper = require('../../utils/UserHelper')
+  const responseHelper = require('../../data/user/LoginResponseHelper');
 
   export default {
     name: 'LoginComponent',
