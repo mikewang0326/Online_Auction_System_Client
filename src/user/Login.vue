@@ -9,7 +9,7 @@
             <form @submit.prevent="submitLogin">
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Username or email</label>
-                <input v-model="login_info.username_or_email" type="text" class="form-control" id="email"
+                <input v-model="login_info.username_or_email" type="text" class="form-control"
                        placeholder="Username or email" autofocus required>
               </div>
               <div class="form-group has-feedback">
@@ -17,7 +17,7 @@
                 <input v-model="login_info.password" type="password" class="form-control"
                        id="password" placeholder="Password" required>
               </div>
-              <div v-if="errorMessage.response" class="text-center text-danger">{{ errorMessage.response }}</div>
+              <div v-if="status_message.content" class="text-center text-danger">{{ status_message.content }}</div>
               <div class="checkbox" >
                 <button class="btn btn-primary pull-right">Sign in</button>
               </div>
@@ -36,6 +36,7 @@
 <script>
   import axios from '../axios'
   const userHelper = require('./UserHelper')
+  const responseHelper = require('./LoginResponseHelper');
 
   export default {
     name: 'LoginComponent',
@@ -49,12 +50,12 @@
     // },
     data() {
       return {
-        errorMessage:{
-          response: ''
+        status_message:{
+          content: ''
         },
         login_info: {
-          username_or_email: 'hixin1@example.com',
-          password: '123321'
+          username_or_email: '',
+          password: ''
         }
       }
     },
@@ -62,29 +63,29 @@
 
     },
     methods: {
-      checkValidation: function () {
-      },
-
       submitLogin: function () {
 
+        this.status_message.content = "Now logining, please wait".toString();
         axios.post('/users/login', {
           'email': this.login_info.username_or_email,
           'password': this.login_info.password
         })
           .then((response) => {
-            console.log(response['data']['id']);
-            console.log(response['data']['token']);
             // if login succeed, save token, and return to user page
-            userHelper.saveLoginStatus(response['data']['id'], response['data']['token']);
-            console.log('user login status is : ' + userHelper.isLogin());
-            if (userHelper.isLogin()) {
-              this.$router.push('/user');
-              console.log('has push to user page');
+            if (responseHelper.isLoginSucceed(response)) {
+              userHelper.saveLoginStatus(response['data']['id'], response['data']['token']);
+              console.log('user login status is : ' + userHelper.isLogin());
+              if (userHelper.isLogin()) {
+                this.$router.push('/user');
+                console.log('has push to user page');
+              }
+            } else {
+              this.status_message.content = responseHelper.getErrorInfo(response);
             }
 
           })
           .catch((error) => {
-            this.errorMessage.response = error.toString();
+            this.status_message.content = error.toString();
           });
       },
 
