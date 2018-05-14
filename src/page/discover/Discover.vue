@@ -14,7 +14,9 @@
       </span>
     </div>
 
+
     <div id="auctions">
+      <div v-if="status_message.content" class="text-center text-danger">{{ status_message.content }}</div>
       <ol v-for="auction in auctions">
         <li>
           <div>
@@ -30,9 +32,13 @@
 
 <script>
   const validator = require('validator');
+  const responseHelper = require('../../data/discover/SearchResponseHelper');
   export default {
     data () {
       return {
+        status_message:{
+          content: ''
+        },
         error:"",
         errorFlag: false,
         users:[],
@@ -40,7 +46,7 @@
           category_select: -1,
           q:''
         },
-        default_category:{categoryId:-1, categoryTitle:"None", categoryDescription:''},
+        default_category:{categoryId:-1, categoryTitle:"all", categoryDescription:''},
         categories:[
           {categoryId:1, categoryTitle:"", categoryDescription:''},
         ],
@@ -79,14 +85,18 @@
 
       search: function () {
         console.log(this.getSearchParameters());
+        this.status_message.content = "Now is searching, please wait...".toString();
         this.$http.get("http://localhost:4941/api/v1/auctions", this.getSearchParameters())
           .then((response) => {
-            console.log("get response")
             console.log(response)
-            this.auctions = response['data'];
+            this.status_message.content = "".toString()
+            if (responseHelper.isValid(response)) {
+               this.auctions = response['data'];
+            } else {
+              this.status_message.content = responseHelper.getErrorInfo(response)
+            }
           }, function (error) {
-            this.error = error;
-            this.errorFlag = true;
+             this.status_message.content = error;
           })
       },
 

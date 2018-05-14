@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Ecosystem</h2>
     <ul>
       <li><router-link to="/discover">Discover</router-link></li>
       <li><router-link to="/buying">Buying</router-link></li>
