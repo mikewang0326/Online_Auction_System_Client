@@ -21,7 +21,7 @@
         <li>
           <div>
             <td>{{ auction.title }}</td>
-            <td><router-link :to="{ name :'auction', params:{ auction_id: auction.id }}"> Go to Auction Page </router-link></td>
+            <td><router-link :to="{ name :'auction_detail', params:{ auction_id: auction.id }}"> Go to Auction Page </router-link></td>
           </div>
         </li>
       </ol>
@@ -67,6 +67,7 @@
 
     mounted: function () {
       this.getCategories();
+      this.search();
     },
 
     methods: {
