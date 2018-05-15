@@ -26,12 +26,20 @@ exports.isLogin = function () {
 
 exports.getUserInfo = function () {
  let user = {
-   name: 'test',
    id: localStorage.userId,
    token: localStorage.token
  }
 
   return user;
+}
+
+exports.isCurrentUser = function (id) {
+  var ret = false;
+  if (localStorage.userId == id) {
+    ret = true;
+  }
+  console.log("UserHelper isCurrentUser : " + ret + " login_id : " + localStorage.userId + ' other_id : ' + id);
+  return ret;
 }
 
 
