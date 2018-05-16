@@ -15,8 +15,8 @@
       <h3>Current Bid: {{ auction_info.currentBid }}</h3>
     </div>
 
-    <div v-if="auction_info.bids.length > 0">
-      <button type="button" class="btn btn-primary" data-toggle="collapse"
+    <div>
+      <button v-bind:disabled="isBidHistoryButtonDisable" type="button" class="btn btn-primary" data-toggle="collapse"
               data-target="#demo">
         Click to view all bid histories
       </button>
@@ -28,26 +28,26 @@
       </div>
     </div>
 
-    <div v-else>
+    <div v-if="isBidHistoryButtonDisable">
       <h3>No bid histories.</h3>
     </div>
 
     <div>
       <button v-if="auction_info.status.isSupportBid" type="button" class="btn btn-primary"
-              data-toggle="modal" data-target="#deleteUserModal">
+              data-toggle="modal" v-bind:disabled="isBidButtonDisable" data-target="#makeBidModal">
         Bid
       </button>
-      <button v-if="auction_info.status.isLoginUserSeller == false" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
+      <button v-bind:disabled="auction_info.status.isLoginUserSeller == false" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
         Edit
       </button>
     </div>
 
-    <div class = "modal fade" id = "deleteUserModal" tabindex = "-1" role = "dialog"
-         aria-labelledby = "deleteUserModalLabel" aria-hidden = "true">
+    <div class = "modal fade" id = "makeBidModal" tabindex = "-1" role = "dialog"
+         aria-labelledby = "makeBidModalLabel" aria-hidden = "true">
       <div class = "modal-dialog" role = "document">
         <div class = "modal-content">
           <div class = "modal-header">
-            <h5 class = "modal-title" id = "deleteUserModalLabel" > Make a Bid </h5>
+            <h5 class = "modal-title" id = "makeBidModalLabel" > Make a Bid </h5>
             <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
               <span aria-hidden = "true" > &times; </span>
             </button>
@@ -136,15 +136,34 @@
     },
 
     computed: {
-      // 一个 computed 属性的 getter 函数
+      isBidHistoryButtonDisable:function(){
+        let ret = true;
+        if(this.auction_info.bids.length > 0) {
+          ret = false;
+        }
+
+        console.log('computed isBidHistoryButtonDisable :' + ret);
+        return ret;
+      },
       isSubmitButtonDisable: function () {
         let ret = true;
         if (this.make_bid_amount > this.auction_info.currentBid) {
           ret = false;
         }
+
         console.log('computed isSubmitButtonDisable :' + ret);
         return ret;
-      }
+      },
+
+      isBidButtonDisable:function () {
+        let ret = true;
+        if(!userHelper.isCurrentUser(this.auction_info.seller.id)) {
+          ret = false;
+        }
+
+        console.log('computed isBidButtonDisable :' + ret);
+        return ret;
+      },
     },
     methods: {
       getAuctionInfo: function () {
@@ -191,10 +210,6 @@
           .catch((error) => {
             this.status_message.content = error.toString();
           });
-      },
-
-      isReadyToMakeABid: function() {
-        return this.make_bid_amount <= this.currentBid;
       },
 
       goToAuctionEditPage: function () {

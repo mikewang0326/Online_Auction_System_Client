@@ -40,7 +40,6 @@
 
     methods: {
       createAuction: function () {
-        alert('createAuction');
         this.$router.push('/create_auction');
       },
       viewAllAuctions: function () {
