@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Discover from './page/discover/Discover'
 import AuctionDetail from './page/discover/AuctionDetail'
+import AuctionList from './page/discover/AuctionList'
 import CreateAuction from './page/discover/CreateAuction'
 import Buying from './page/buying/Buying'
 import Selling from './page/selling/Selling'
@@ -26,6 +27,11 @@ const routes = [
     path: "/discover",
     name: "discover",
     component: Discover
+  },
+  {
+    path: "/auction_list",
+    name:"auction_list",
+    component: AuctionList
   },
   {
     path: "/auction_detail",

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  const userHelper = require('../../utils/UserHelper');
   export default {
     name: 'SellingComponent',
     data() {
@@ -43,16 +44,16 @@
         this.$router.push('/create_auction');
       },
       viewAllAuctions: function () {
-        alert('viewAllAuctions');
+        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'all'}})
       },
       viewActiveAuctions: function () {
-        alert('viewActiveAuctions');
+        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'active'}})
       },
       viewExpiredAuctions: function () {
-        alert('viewExpiredAuctions');
+        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'expired'}})
       },
       viewUpcomingAuctions: function () {
-        alert('viewUpcomingAuctions');
+        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'upcoming'}})
       },
 
     }
