@@ -41,7 +41,7 @@
 
     methods: {
       createAuction: function () {
-        this.$router.push('/create_auction');
+        this.$router.push({ name: 'create_auction', params: { event: 'create_auction'}});
       },
       viewAllAuctions: function () {
         this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'all'}})

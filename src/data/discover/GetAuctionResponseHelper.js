@@ -123,14 +123,7 @@ exports.formatData = function (response) {
       username: data['seller']['username']
     },
     bids: createAuctionBidsData(data['bids']),
-    status:{
-      isLoginUserSeller: false, // enable edit button
-      isSupportBid: false,     // enable bid button
-    },
   }
-
-  // add status info
-  auction_info.status = createStatusInfo(auction_info);
 
   return auction_info;
 }
@@ -152,25 +145,6 @@ function createAuctionBidsData(result) {
   return data
 }
 
-function createStatusInfo(auction_info) {
-  let status_info = {
-    isLoginUserSeller: isLoginUserSeller(auction_info), // enable edit button
-    isSupportBid: isSupportBid(auction_info),     // enable bid button
-  };
-
-  return status_info;
-}
-
-function isLoginUserSeller(auction_info) {
-  let ret = false;
-  ret = userHelper.isCurrentUser(auction_info.seller.id)
-  return ret;
-}
-
-function isSupportBid(auction_info) {
-  let ret = true;
-  return ret;
-}
 
 
 

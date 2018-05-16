@@ -11,6 +11,8 @@
       <h3>Seller: {{ auction_info.seller.username }}</h3>
       <h3>Start date: {{ auction_info.startDateTime }}</h3>
       <h3>End date: {{ auction_info.endDateTime }}</h3>
+      <h3>Reserve Price: {{ auction_info.reservePrice }}</h3>
+      <h3>Starting bid: {{ auction_info.startingBid }}</h3>
       <h3>Description: {{ auction_info.description }}</h3>
       <h3>Current Bid: {{ auction_info.currentBid }}</h3>
     </div>
@@ -33,11 +35,11 @@
     </div>
 
     <div>
-      <button v-if="auction_info.status.isSupportBid" type="button" class="btn btn-primary"
+      <button type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isBidButtonDisable" data-target="#makeBidModal">
         Bid
       </button>
-      <button v-bind:disabled="auction_info.status.isLoginUserSeller == false" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
+      <button v-bind:disabled="isEditButtonDisable" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
         Edit
       </button>
     </div>
@@ -54,7 +56,7 @@
 
           </div>
           <div class = "modal-body">
-            You should give a bid more than $ {{ auction_info.currentBid }}
+            You should give a bid more than $ {{ minBidAmount }}
             <form @submit.prevent="prepareForBid">
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Bid you will make</label>
@@ -89,6 +91,7 @@
 <script>
   import axios from '../../axios'
   const userHelper = require('../../utils/UserHelper')
+  const timeHelper = require('../../utils/TimeHelper');
   const auctionDetailResponseHelper = require('../../data/discover/GetAuctionResponseHelper');
   const makeBidResponseHelper = require('../../data/discover/MakeBidResponseHelper');
 
@@ -123,10 +126,6 @@
             username: ''
           },
           bids: [],
-          status:{
-            isLoginUserSeller: true, // enable edit button
-            isSupportBid: true,     // enable bid button
-          },
         },
         make_bid_amount: 0
       }
@@ -136,6 +135,13 @@
     },
 
     computed: {
+      minBidAmount:function() {
+        let ret = this.auction_info.startingBid;
+        if (this.auction_info.currentBid > 0) {
+          ret = this.auction_info.currentBid;
+        }
+        return ret;
+      },
       isBidHistoryButtonDisable:function(){
         let ret = true;
         if(this.auction_info.bids.length > 0) {
@@ -145,6 +151,7 @@
         console.log('computed isBidHistoryButtonDisable :' + ret);
         return ret;
       },
+
       isSubmitButtonDisable: function () {
         let ret = true;
         if (this.make_bid_amount > this.auction_info.currentBid) {
@@ -158,16 +165,31 @@
       isBidButtonDisable:function () {
         let ret = true;
         if(!userHelper.isCurrentUser(this.auction_info.seller.id)) {
-          ret = false;
+          if (timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime) > new Date().getTime()
+            && timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime) > new Date().getTime()) {
+            ret = false;
+          }
         }
 
         console.log('computed isBidButtonDisable :' + ret);
         return ret;
       },
+
+      isEditButtonDisable:function () {
+        let ret = true;
+        if(userHelper.isCurrentUser(this.auction_info.seller.id)) {
+          if (timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime) > new Date().getTime()
+            && timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime) > new Date().getTime()) {
+            ret = false;
+          }
+        }
+
+        console.log('computed isEditButtonDisable :' + ret);
+        return ret;
+      },
     },
     methods: {
       getAuctionInfo: function () {
-
         this.status_message.content = "Now is loading, please wait...".toString();
         var auction_id = this.$route.params.auction_id;
         console.log("auction_id : " + auction_id);
@@ -213,7 +235,7 @@
       },
 
       goToAuctionEditPage: function () {
-        alert('go to auction edit page');
+        this.$router.push({ name: 'create_auction', params: { event: 'update_auction', auction_id:this.$route.params.auction_id, auction_info:this.auction_info}})
       }
     }
   }

@@ -4,10 +4,10 @@
       <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title">Create an auction</h3>
+            <h3 class="panel-title">{{ panel_title }}</h3>
           </div>
           <div class="panel-body">
-            <form @submit.prevent="createAuction">
+            <form @submit.prevent="dispatchAuction">
               <!-- title -->
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Title</label>
@@ -60,7 +60,7 @@
 
               <div v-if="status_message.content" class="text-center text-danger">{{ status_message.content }}</div>
               <div class="checkbox" >
-                <button class="btn btn-primary pull-right">Register</button>
+                <button class="btn btn-primary pull-right">Submit</button>
               </div>
             </form>
 
@@ -82,6 +82,7 @@
     name: 'CreateAuctionComponent',
     data() {
       return {
+        panel_title: '',
         validate_info:{
           startDateTime:{
             enable: false,
@@ -118,17 +119,34 @@
       }
     },
     mounted: function () {
-
+       this.init();
     },
     methods: {
+      init:function(){
+        var event_name = this.$route.params.event;
+        if (event_name == 'create_auction') {
+          this.panel_title = 'Create an Auction';
+        } else if (event_name == 'update_auction') {
+          this.panel_title = 'Update an Auction';
+          this.auction_info = this.$route.params.auction_info;
+        }
+      },
+
+      dispatchAuction:function() {
+          var event_name = this.$route.params.event;
+          if (event_name == 'create_auction') {
+            this.createAuction()
+          } else if (event_name == 'update_auction') {
+            this.updateAuction();
+          }
+      },
+
       createAuction: function () {
         console.log(this.auction_info);
 
         if(this.preValidateCheck() == false) {
           return;
         }
-
-        return;
 
         this.status_message.content = "Now creating, please wait".toString();
         let axiosConfig = {
@@ -143,8 +161,8 @@
           'description': this.auction_info.description,
           'startDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime),
           'endDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime),
-          'reservePrice': this.auction_info.reservePrice,
-          'startingBid': this.auction_info.startingBid,
+          'reservePrice': parseFloat(this.auction_info.reservePrice),
+          'startingBid': parseFloat(this.auction_info.startingBid),
         }, axiosConfig)
           .then((response) => {
             console.log(response);
@@ -152,6 +170,48 @@
               // this.$router.go(-1);
               // this.$router.replace('/user');
               this.$router.replace({ name: 'auction_detail', params: { auction_id: responseHelper.getAuctionId(response) }})
+            } else {
+              this.status_message.content = responseHelper.getErrorInfo(response);
+            }
+          })
+          .catch((error) => {
+            this.status_message.content = error.toString();
+          });
+      },
+
+      updateAuction: function () {
+        console.log(this.auction_info);
+
+        if(this.preValidateCheck() == false) {
+          return;
+        }
+
+        this.status_message.content = "Now updating, please wait".toString();
+        let axiosConfig = {
+          headers: {
+            'Content-Type':'application/json',
+            'X-Authorization': userHelper.getUserInfo().token
+          }
+        };
+
+        let auction_id = this.$route.params.auction_id;
+        let data = {
+          'title': this.auction_info.title,
+          'categoryId': this.auction_info.categoryId,
+          'description': this.auction_info.description,
+          'startDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime),
+          'endDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime),
+          'reservePrice': parseFloat(this.auction_info.reservePrice),
+          'startingBid': parseFloat(this.auction_info.startingBid),
+        };
+
+        console.log(data);
+        axios.patch('/auctions/' + auction_id, data, axiosConfig)
+          .then((response) => {
+            console.log(response);
+            if (responseHelper.isValid(response)) {
+              this.$router.back();
+              this.$router.replace({ name: 'auction_detail', params: { auction_id: auction_id }})
             } else {
               this.status_message.content = responseHelper.getErrorInfo(response);
             }

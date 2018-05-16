@@ -4,13 +4,14 @@ const nodeDate = require('node-datetime');
 
 exports.convertMillsecondsToFormattedTime = function (millseconds) {
     let date = nodeDate.create(millseconds);
-    let formattedDataTime = date.format('Y-m-d H:M:S');
+    let formattedDataTime = date.format('Y-m-d');
+  // let formattedDataTime = date.format('Y-m-d H:M:S');
     return formattedDataTime;
 }
 
 exports.convertFormattedTimeToMillseconds = function (formattedTime) {
     let time = new Date(formattedTime).getTime();
-    return time;
+    return parseInt(time.toString());
 }
 
 
