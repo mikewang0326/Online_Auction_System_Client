@@ -7,6 +7,7 @@ exports.isValid = function (response) {
 function isSucceed(response) {
   // ok: true, status: 200
   let ret = false;
+  console.log('isSucceed response = ' + response)
   if (undefined != response && null != response) {
      if (response['status'] == 200) {
        ret = true;
@@ -29,13 +30,14 @@ function isResultNotEmpty(response) {
 
 
 exports.getErrorInfo = function (response) {
-  // status: 201, statusText: "Created"
-  let ret = "Login error";
-  if (!isSucceed()) {
+  // status: 200, statusText: "Created"
+  let ret = "Login error".toString();
+  if (!isSucceed(response)) {
       ret = response['error'];
   } else if (!isResultNotEmpty(response)) {
-      ret = "No search result"
+      ret = "No search result".toString()
   }
+  console.log('SearchResponseHelper getErrorInfo ret = ' + ret);
   return ret;
 }
 

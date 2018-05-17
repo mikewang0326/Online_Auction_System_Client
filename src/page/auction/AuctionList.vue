@@ -7,8 +7,8 @@
         <li v-on:click="goToAuctionDetailPage(auction)">
           <div id="auction_item">
             <h5><strong>{{ auction.title }}</strong></h5>
-            <h6>Start Date : {{ auction.startDateTime}}</h6>
-            <h6>End Date: {{ auction.endDateTime}}</h6>
+            <h6>Start     Date : {{ formattedstartDateTime(auction.startDateTime) }} </h6>
+            <h6>End       Date : {{ formattedstartDateTime(auction.endDateTime) }} </h6>
             <h6>Reserver Price : ${{ auction.reservePrice}}</h6>
             <h6 v-if="auction.startingBid">Starting Bid : {{ auction.startingBid}}</h6>
             <h6 v-if="auctions.length">Bids number : {{ auctions.length}}</h6>
@@ -24,6 +24,7 @@
   const validator = require('validator');
   const responseHelper = require('../../data/discover/SearchResponseHelper');
   const userHelper = require('../../utils/UserHelper');
+  const timeHelper = require('../../utils/TimeHelper');
   export default {
     data () {
       return {
@@ -37,16 +38,16 @@
           {categoryId:1, categoryTitle:"", categoryDescription:''},
         ],
         auctions:[
-          {
-            id:1,
-            categoryTitle:'apparel',
-            categoryId:1,
-            title:"Super cape",
-            reservePrice:10,
-            startDateTime:1518606000000,
-            endDateTime:1520938800000,
-            currentBid:0.01
-          },
+          // {
+          //   id:1,
+          //   categoryTitle:'apparel',
+          //   categoryId:1,
+          //   title:"Super cape",
+          //   reservePrice:10,
+          //   startDateTime:1518606000000,
+          //   endDateTime:1520938800000,
+          //   currentBid:0.01
+          // },
         ],
       }
     },
@@ -77,6 +78,9 @@
     },
 
     methods: {
+      formattedstartDateTime:function(millseconds){
+        return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
+      },
       search: function () {
         console.log(this.getSearchParameters());
         this.status_message.content = "Now is searching, please wait...".toString();
@@ -87,6 +91,7 @@
             if (responseHelper.isValid(response)) {
               this.auctions = response['data'];
             } else {
+              console.log("xxxxx");
               this.status_message.content = responseHelper.getErrorInfo(response)
             }
           }, function (error) {

@@ -24,10 +24,10 @@
         <li v-on:click="goToAuctionDetailPage(auction)">
           <div id="auction_item">
             <h5><strong>{{ auction.title }}</strong></h5>
-            <h6>Start Date : {{ auction.startDateTime}}</h6>
-            <h6>End Date: {{ auction.endDateTime}}</h6>
+            <h6>Start     Date : {{ formattedstartDateTime(auction.startDateTime) }} </h6>
+            <h6>End       Date : {{ formattedstartDateTime(auction.endDateTime) }} </h6>
             <h6>Reserver Price : ${{ auction.reservePrice}}</h6>
-            <h6 v-if="auction.startingBid">Starting Bid : {{ auction.startingBid}}</h6>
+            <h6 v-if="auction.startingBid">Starting Bid : {{ auction.startingBid}} </h6>
             <h6 v-if="auctions.length">Bids number : {{ auctions.length}}</h6>
           </div>
         </li>
@@ -40,6 +40,7 @@
 <script>
   const validator = require('validator');
   const responseHelper = require('../../data/discover/SearchResponseHelper');
+  const timeHelper = require('../../utils/TimeHelper');
   export default {
     data () {
       return {
@@ -78,6 +79,10 @@
     },
 
     methods: {
+      formattedstartDateTime:function(millseconds){
+        return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
+      },
+
       getCategories: function () {
         this.$http.get("http://localhost:4941/api/v1/categories")
           .then(function (response) {

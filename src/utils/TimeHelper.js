@@ -9,6 +9,13 @@ exports.convertMillsecondsToFormattedTime = function (millseconds) {
     return formattedDataTime;
 }
 
+exports.convertMillsecondsToFormattedTimeYMDHMS = function (millseconds) {
+  let date = nodeDate.create(millseconds);
+  // let formattedDataTime = date.format('Y-m-d');
+  let formattedDataTime = date.format('Y-m-d H:M:S');
+  return formattedDataTime;
+}
+
 exports.convertFormattedTimeToMillseconds = function (formattedTime) {
     let time = new Date(formattedTime).getTime();
     return parseInt(time.toString());

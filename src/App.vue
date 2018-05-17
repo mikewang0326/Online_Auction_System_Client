@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     discoverClassName: function () {
-      console.log('discoverClassName path' + this.$route.path)
+      // console.log('discoverClassName path' + this.$route.path)
       if ('/discover' == this.$route.path || '/' == this.$route.path) {
         return 'active';
       } else {
@@ -28,7 +28,7 @@ export default {
       }
     },
     buyingClassName:function () {
-      console.log('buyClassName path' + this.$route.path)
+      // console.log('buyClassName path' + this.$route.path)
       if ('/buying' == this.$route.path) {
         return 'active';
       } else {
@@ -36,7 +36,7 @@ export default {
       }
     },
     sellingClassName:function () {
-      console.log('sellingClassName path' + this.$route.path)
+      // console.log('sellingClassName path' + this.$route.path)
       if ('/selling' == this.$route.path) {
         return 'active';
       } else {
@@ -44,7 +44,7 @@ export default {
       }
     },
     userClassName:function () {
-      console.log('userClassName path' + this.$route.path)
+      // console.log('userClassName path' + this.$route.path)
       if ('/user' == this.$route.path || this.$route.path.indexOf('/user') > -1) {
         return 'active';
       } else {
