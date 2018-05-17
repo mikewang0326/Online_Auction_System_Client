@@ -1,16 +1,20 @@
 <template>
   <div id="auction_list">
-    <h1>{{ this.pageTitle }}</h1>
+    <h1 id="title_bar">{{ this.pageTitle }}</h1>
     <div id="auctions">
       <div v-if="status_message.content" class="text-center text-danger">{{ status_message.content }}</div>
-      <ol v-for="auction in auctions">
-        <li>
-          <div>
-            <td>{{ auction.title }}</td>
-            <td><router-link :to="{ name :'auction_detail', params:{ auction_id: auction.id }}"> Go to Auction Page </router-link></td>
+      <ul v-for="auction in auctions">
+        <li v-on:click="goToAuctionDetailPage(auction)">
+          <div id="auction_item">
+            <h5><strong>{{ auction.title }}</strong></h5>
+            <h6>Start Date : {{ auction.startDateTime}}</h6>
+            <h6>End Date: {{ auction.endDateTime}}</h6>
+            <h6>Reserver Price : ${{ auction.reservePrice}}</h6>
+            <h6 v-if="auction.startingBid">Starting Bid : {{ auction.startingBid}}</h6>
+            <h6 v-if="auctions.length">Bids number : {{ auctions.length}}</h6>
           </div>
         </li>
-      </ol>
+      </ul>
     </div>
 
   </div>
@@ -95,6 +99,10 @@
         return {params}
 
       },
+
+      goToAuctionDetailPage: function (item) {
+        this.$router.push({ name: 'auction_detail', params: { auction_id: item.id }})
+      }
 
     }
 

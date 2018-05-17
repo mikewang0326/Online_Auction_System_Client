@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Buying Page</h1>
+  <div id="buying_page">
+    <h3 id="title_bar">Buying Page</h3>
     <div class="container">
       <button class="btn btn-primary pull-left" v-on:click="viewAllAuctions">View all auctions</button>
     </div>
@@ -50,3 +50,51 @@
     }
   }
 </script>
+
+<style scoped>
+</style>
+
+<style>
+  #buying_page {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: left;
+    color: #2c3e50;
+    margin-top: 0px;
+  }
+
+  #title_bar {
+    background-color: darkgrey;
+    margin: 5px 10px 5px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #user_basic_info{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+  #bottom_bar{
+    /*background-color: khaki;*/
+    margin: 10px 10px 10px 10px;
+    padding: 10px 0px 0px 0px;
+  }
+
+  #auction_bid_history{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #handle_auction_layout{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  .img-thumbnail {
+    height: 100px;
+    width: 100px;
+  }
+</style>
