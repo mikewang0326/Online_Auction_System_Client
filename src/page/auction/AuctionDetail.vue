@@ -1,23 +1,31 @@
 <template>
   <div id="auction_detail">
-    <h1>Auction Detail Page</h1>
-    <div v-if="status_message.content" class="text-center text-danger">{{ status_message.content }}</div>
+    <h3 id="title_bar">Auction Detail Page</h3>
+    <div v-if="status_message.content" class="text-left text-danger">{{ status_message.content }}</div>
+    <div id="div_upload_photo">
+      <img v-bind:src="photoUrl" class="img-thumbnail">
 
+      <button type="button" class="btn btn-primary"
+              data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#uploadPhotoModal">
+        Click to add a photo
+      </button>
 
-    <img src="https://trademe.tmcdn.co.nz/photoserver/plusw/786393634.jpg" class="img-thumbnail">
-
-    <div>
-      <h3>Title: {{ auction_info.title }}</h3>
-      <h3>Seller: {{ auction_info.seller.username }}</h3>
-      <h3>Start date: {{ auction_info.startDateTime }}</h3>
-      <h3>End date: {{ auction_info.endDateTime }}</h3>
-      <h3>Reserve Price: {{ auction_info.reservePrice }}</h3>
-      <h3>Starting bid: {{ auction_info.startingBid }}</h3>
-      <h3>Description: {{ auction_info.description }}</h3>
-      <h3>Current Bid: {{ auction_info.currentBid }}</h3>
+      <div v-if="upload_info.message" class="text-left text-danger">{{ upload_info.message }}</div>
     </div>
 
-    <div>
+
+    <div id="auction_basic_info">
+      <h4>Title: {{ auction_info.title }}</h4>
+      <h4>Seller: {{ auction_info.seller.username }}</h4>
+      <h4>Start date: {{ auction_info.startDateTime }}</h4>
+      <h4>End date: {{ auction_info.endDateTime }}</h4>
+      <h4>Reserve Price: {{ auction_info.reservePrice }}</h4>
+      <h4>Starting bid: {{ auction_info.startingBid }}</h4>
+      <h4>Description: {{ auction_info.description }}</h4>
+      <h4>Current Bid: {{ auction_info.currentBid }}</h4>
+    </div>
+
+    <div id="auction_bid_history">
       <button v-bind:disabled="isBidHistoryButtonDisable" type="button" class="btn btn-primary" data-toggle="collapse"
               data-target="#demo">
         Click to view all bid histories
@@ -28,13 +36,10 @@
           <li> Amount: {{ bid.amount }} Datetime: {{ bid. datetime }} Buyerid: {{ bid.buyerId}} buyUsername: {{ bid. buyerUsername}}</li>
         </ol>
       </div>
+      <h6 v-if="isBidHistoryButtonDisable">No bid histories.</h6>
     </div>
 
-    <div v-if="isBidHistoryButtonDisable">
-      <h3>No bid histories.</h3>
-    </div>
-
-    <div>
+    <div id="handle_auction_layout">
       <button type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isBidButtonDisable" data-target="#makeBidModal">
         Bid
@@ -44,6 +49,7 @@
       </button>
     </div>
 
+    <!-- make a bid-->
     <div class = "modal fade" id = "makeBidModal" tabindex = "-1" role = "dialog"
          aria-labelledby = "makeBidModalLabel" aria-hidden = "true">
       <div class = "modal-dialog" role = "document">
@@ -83,6 +89,45 @@
       </div>
     </div>
 
+    <!-- upload photo -->
+    <div class = "modal fade" id = "uploadPhotoModal" tabindex = "-1" role = "dialog"
+         aria-labelledby = "makeBidModalLabel" aria-hidden = "true">
+      <div class = "modal-dialog" role = "document">
+        <div class = "modal-content">
+          <div class = "modal-header">
+            <h5 class = "modal-title" id = "uploadPhotoModalLabel" > Upload Photo </h5>
+            <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
+              <span aria-hidden = "true" > &times; </span>
+            </button>
+
+          </div>
+          <div class = "modal-body">
+            Choose one jpeg or png photo to upload
+            <form @submit.prevent="uploadPhoto">
+              <div class="form-group has-feedback">
+                <label class="cols-sm-2 control-label"></label>
+                <input type="file" @change="onFileChanged">
+              </div>
+              <div v-if="auction_info.title" class="text-center text-danger">{{ status_message.content }}</div>
+
+              <div class = "modal-footer">
+                <button type = "submit" class = "btn btn-primary" data-dismiss = "modal" v-on:click="uploadPhoto" v-bind:disabled="isUploadButtonDisable">
+                  Upload
+                </button>
+                <button type = "button" class = "btn btn-secondary" data-dismiss = "modal">
+                  Cancel
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
 
 
   </div>
@@ -94,6 +139,7 @@
   const timeHelper = require('../../utils/TimeHelper');
   const auctionDetailResponseHelper = require('../../data/discover/GetAuctionResponseHelper');
   const makeBidResponseHelper = require('../../data/discover/MakeBidResponseHelper');
+  const uploadPhotoResponseHelper = require('../../data/discover/UploadPhotoResponseHelper');
 
   export default {
     name: 'AuctionDetailComponent',
@@ -110,6 +156,12 @@
         status_message:{
           content: ''
         },
+        selectedFile: null,
+        photoUrl: "http://localhost:4941/api/v1/auctions/"+ this.$route.params.auction_id + "/photos",
+        upload_info:{
+          message:""
+        },
+
         auction_info: {
           categoryId: '',
           categoryTitle: '',
@@ -187,13 +239,62 @@
         console.log('computed isEditButtonDisable :' + ret);
         return ret;
       },
+
+
+      isUploadButtonDisable: function () {
+        let ret = true;
+        if (this.selectedFile != null) {
+          ret = false;
+        }
+
+        console.log('computed isSubmitButtonDisable :' + ret);
+        return ret;
+      },
+
     },
     methods: {
+      onFileChanged (event) {
+        console.log('OnFileChanged()')
+        this.selectedFile = event.target.files[0]
+        console.log('OnFileChanged() selectedFile :' + this.selectedFile)
+      },
+
+      uploadPhoto() {
+        console.log('uploadPhoto()')
+        this.upload_info.message = "Uploading, please wait".toString();
+        // upload file, get it from this.selectedFile
+        let axiosConfig = {
+          headers: {
+            'Content-Type':'image/png',
+            'X-Authorization': userHelper.getUserInfo().token
+          }
+        };
+
+        axios.post(
+          'http://localhost:4941/api/v1/auctions/'+ this.$route.params.auction_id +'/photos',
+          this.selectedFile, axiosConfig).then(response => {
+            console.log(response);
+          if (uploadPhotoResponseHelper.isValid(response)) {
+            this.photoUrl = this.createReplaceablePhotoUrl();
+            this.selectedFile = null;
+            this.upload_info.message = "";
+          } else {
+            this.upload_info.message = this.uploadPhotoResponseHelper.getErrorInfo(response).toString();
+          }
+        }).catch((error) => {
+          this.upload_info.message = error.toString();
+        });;
+      },
+
+      createReplaceablePhotoUrl () {
+        return "http://localhost:4941/api/v1/auctions/"+ this.$route.params.auction_id + "/photos?" + Math.random()*100;
+      },
+
       getAuctionInfo: function () {
         this.status_message.content = "Now is loading, please wait...".toString();
         var auction_id = this.$route.params.auction_id;
         console.log("auction_id : " + auction_id);
-        this.$http.get("http://localhost:4941/api/v1/auctions/" + auction_id)
+        axios.get("http://localhost:4941/api/v1/auctions/" + auction_id)
           .then((response) => {
             console.log(response)
             this.status_message.content = "".toString()
@@ -201,11 +302,11 @@
               this.auction_info = auctionDetailResponseHelper.formatData(response)
               console.log(this.auction_info);
             } else {
-              this.status_message.content = auctionDetailResponseHelper.getErrorInfo(response)
+              this.status_message.content = this.auctionDetailResponseHelper.getErrorInfo(response)
             }
-          }, function (error) {
-            this.status_message.content = error;
-          })
+          }).catch((error) => {
+          this.status_message.content = error.toString();
+        });
       },
 
       prepareForBid: function () {
@@ -254,8 +355,37 @@
     margin-top: 60px;
   }
 
+  #title_bar {
+    background-color: darkgrey;
+    margin: 5px 10px 5px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #div_upload_photo{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+  #auction_basic_info{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #auction_bid_history{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #handle_auction_layout{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+
   .img-thumbnail {
-    height: 40px;
-    width: 40px;
+    height: 100px;
+    width: 100px;
   }
 </style>
