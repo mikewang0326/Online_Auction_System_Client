@@ -33,7 +33,7 @@
 
       <div id="demo" class="collapse out">
         <ol v-for="bid in auction_info.bids">
-          <li> Amount: {{ bid.amount }} Datetime: {{ bid. datetime }} Buyerid: {{ bid.buyerId}} buyUsername: {{ bid. buyerUsername}}</li>
+          <li> Amount: {{ bid.amount }} Datetime: {{ bid. datetime }} Buyerid: {{ bid.buyerId}} buyUsername: <router-link :to="{ name :'user', params:{ user_id: bid.buyerId }}">{{ bid. buyerUsername}}</router-link></li>
         </ol>
       </div>
       <h6 v-if="isBidHistoryButtonDisable">No bid histories.</h6>
