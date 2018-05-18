@@ -23,6 +23,7 @@
       <ul v-for="auction in auctions">
         <li v-on:click="goToAuctionDetailPage(auction)">
           <div id="auction_item">
+            <img v-bind:src="getAuctionPhotoUrl(auction.id)" class="img-thumbnail">
             <h5><strong>{{ auction.title }}</strong></h5>
             <h6>Start     Date : {{ formattedstartDateTime(auction.startDateTime) }} </h6>
             <h6>End       Date : {{ formattedstartDateTime(auction.endDateTime) }} </h6>
@@ -81,6 +82,10 @@
     methods: {
       formattedstartDateTime:function(millseconds){
         return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
+      },
+
+      getAuctionPhotoUrl:function(id){
+        return "http://localhost:4941/api/v1/auctions/"+ id + "/photos";
       },
 
       getCategories: function () {
