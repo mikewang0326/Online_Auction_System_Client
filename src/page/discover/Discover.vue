@@ -8,6 +8,18 @@
           {{ category.categoryTitle }}
         </option>
       </select>
+
+      <div id='layout_auction_status_option'>
+        <input type="radio" id="status_all" value="all" v-model="checkedNames" checked="checked">
+        <label for="status_all">All</label>
+        <input type="radio" id="status_active" value="active" v-model="checkedNames">
+        <label for="status_active">Active</label>
+        <input type="radio" id="status_expired" value="expired" v-model="checkedNames">
+        <label for="status_expired">Expired</label>
+        <br>
+        <!--<span>Checked names: {{ checkedNames }}</span>-->
+      </div>
+
     </div>
 
     <div class="input-group">
@@ -71,6 +83,14 @@
           //   currentBid:0.01
           // },
         ],
+        checkedNames: "all", // default value
+      }
+    },
+
+    watch: {
+      checkedNames: function (newCheckNames, oldCheckname) {
+        console.log('watch checkedNames newCheckNames"' + newCheckNames + " oldCheckname:" + oldCheckname);
+        this.search();
       }
     },
 
@@ -79,7 +99,12 @@
       this.search();
     },
 
+
     methods: {
+      onStatusOptionSelected:function(status) {
+        alert(status);
+      },
+
       formattedstartDateTime:function(millseconds){
         return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
       },
@@ -123,16 +148,25 @@
 
       getSearchParameters: function() {
 
-        var q = this.search_parameter.q;
-        var categoryId = this.search_parameter.category_select;
 
         var params = {}
-        if(undefined != q && !validator.isEmpty(q.toString())) {
-           params.q = q;
-        }
 
+        // 1, category
+        var categoryId = this.search_parameter.category_select;
         if(undefined != categoryId && validator.isNumeric(categoryId.toString()) && parseInt(categoryId) > 0) {
           params['category-id'] = categoryId;
+        }
+
+        // 2, status
+        var status = this.checkedNames;
+        if(undefined != status && null != status && !validator.isEmpty(status.toString())) {
+          params['status'] = status;
+        }
+
+        // 3, query
+        var q = this.search_parameter.q;
+        if(undefined != q && !validator.isEmpty(q.toString())) {
+          params.q = q;
         }
 
         return {params}
@@ -181,10 +215,9 @@
     padding: 10px 10px 10px 10px;
   }
 
-  #handle_auction_layout{
+  #layout_auction_status_option{
+
     background-color: khaki;
-    margin: 10px 10px 10px 10px;
-    padding: 10px 10px 10px 10px;
   }
 
   .img-thumbnail {
