@@ -59,16 +59,16 @@
           {categoryId:1, categoryTitle:"", categoryDescription:''},
         ],
         auctions:[
-          {
-            id:1,
-            categoryTitle:'apparel',
-            categoryId:1,
-            title:"Super cape",
-            reservePrice:10,
-            startDateTime:1518606000000,
-            endDateTime:1520938800000,
-            currentBid:0.01
-          },
+          // {
+          //   id:1,
+          //   categoryTitle:'apparel',
+          //   categoryId:1,
+          //   title:"Super cape",
+          //   reservePrice:10,
+          //   startDateTime:1518606000000,
+          //   endDateTime:1520938800000,
+          //   currentBid:0.01
+          // },
         ],
       }
     },
@@ -97,6 +97,9 @@
       },
 
       search: function () {
+        //reset data
+        this.auctions = [];
+
         console.log(this.getSearchParameters());
         this.status_message.content = "Now is searching, please wait...".toString();
         this.$http.get("http://localhost:4941/api/v1/auctions", this.getSearchParameters())

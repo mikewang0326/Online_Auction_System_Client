@@ -3,6 +3,11 @@
     <h3 id="title_bar">User Page</h3>
     <div v-if="status_message.content" class="text-left text-danger">{{ status_message.content }}</div>
 
+    <div id="div_user_photo">
+      <img src="../../assets/avatar_default.png" class="img-thumbnail">
+
+    </div>
+
     <div id="user_basic_info">
       <h4>ID: {{ user.id }}</h4>
       <h4>Token: {{ user.token }}</h4>
@@ -145,7 +150,7 @@
     padding: 10px 0px 0px 0px;
   }
 
-  #auction_bid_history{
+  #div_user_photo{
     background-color: khaki;
     margin: 10px 10px 10px 10px;
     padding: 10px 10px 10px 10px;
