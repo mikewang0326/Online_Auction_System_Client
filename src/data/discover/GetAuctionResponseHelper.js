@@ -70,7 +70,7 @@ exports.getErrorInfo = function (response) {
   if (!isSucceed(response)) {
       ret = response['error'];
   } else if (!isResultNotEmpty(response)) {
-      ret = "No search result"
+      ret = "No results"
   }
   return ret;
 }

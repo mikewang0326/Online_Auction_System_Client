@@ -31,11 +31,11 @@ function isResultNotEmpty(response) {
 
 exports.getErrorInfo = function (response) {
   // status: 200, statusText: "Created"
-  let ret = "Login error".toString();
+  let ret = "Search error".toString();
   if (!isSucceed(response)) {
       ret = response['error'];
   } else if (!isResultNotEmpty(response)) {
-      ret = "No search result".toString()
+      ret = "No search results".toString()
   }
   console.log('SearchResponseHelper getErrorInfo ret = ' + ret);
   return ret;

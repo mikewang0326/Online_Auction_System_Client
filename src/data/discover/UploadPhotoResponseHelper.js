@@ -31,11 +31,9 @@ function isResultNotEmpty(response) {
 
 exports.getErrorInfo = function (response) {
   // status: 201, statusText: "Created"
-  let ret = "Login error";
+  let ret = "Upload photo error";
   if (!isSucceed(response)) {
       ret = response['error'];
-  } else if (!isResultNotEmpty(response)) {
-      ret = "No search result"
   }
   return ret;
 }
