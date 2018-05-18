@@ -32,9 +32,9 @@
       </button>
 
       <div id="demo" class="collapse out">
-        <ol v-for="bid in auction_info.bids">
-          <li> Amount: {{ bid.amount }} Datetime: {{ bid. datetime }} Buyerid: {{ bid.buyerId}} buyUsername: <router-link :to="{ name :'user', params:{ user_id: bid.buyerId }}">{{ bid. buyerUsername}}</router-link></li>
-        </ol>
+        <ul v-for="bid in orderedBids">
+          <li> Amount: <strong>{{ bid.amount }}</strong> {{ bid. datetime }} <router-link :to="{ name :'user', params:{ user_id: bid.buyerId }}">{{ bid. buyerUsername}}</router-link></li>
+        </ul>
       </div>
       <h6 v-if="isBidHistoryButtonDisable">No bid histories.</h6>
     </div>
@@ -135,6 +135,7 @@
 
 <script>
   import axios from '../../axios'
+  var _ = require('lodash');
   const userHelper = require('../../utils/UserHelper')
   const timeHelper = require('../../utils/TimeHelper');
   const auctionDetailResponseHelper = require('../../data/discover/GetAuctionResponseHelper');
@@ -250,6 +251,10 @@
         console.log('computed isSubmitButtonDisable :' + ret);
         return ret;
       },
+
+      orderedBids: function () {
+        return _.orderBy(this.auction_info.bids, ['datetime'], ['desc'])
+      }
 
     },
     methods: {

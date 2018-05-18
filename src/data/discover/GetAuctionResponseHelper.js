@@ -134,7 +134,7 @@ function createAuctionBidsData(result) {
   for (let i=0; i< length; i++) {
     let item = {
       'amount':result[i]['amount'],
-      'datetime':timeHelper.convertMillsecondsToFormattedTime(result[i]['datetime']),
+      'datetime':timeHelper.convertMillsecondsToFormattedTimeYMDHMS(result[i]['datetime']),
       'buyerId':result[i]['buyerId'],
       'buyerUsername':result[i]['buyerUsername'],
     }
