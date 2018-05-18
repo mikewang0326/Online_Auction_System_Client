@@ -2,14 +2,15 @@
   <div id="discover">
 
     <div id="category_bar">
-      <span >Select one Category: {{ search_parameter.category_select }}</span>
-      <select v-model="search_parameter.category_select">
+      <span>Auction Category: {{  }}</span>
+      <select v-model="category_select">
         <option v-for="category in categories" v-bind:value="category.categoryId">
           {{ category.categoryTitle }}
         </option>
       </select>
 
       <div id='layout_auction_status_option'>
+        <span> Auction   Status   :</span>
         <input type="radio" id="status_all" value="all" v-model="checkedNames" checked="checked">
         <label for="status_all">All</label>
         <input type="radio" id="status_active" value="active" v-model="checkedNames">
@@ -23,9 +24,10 @@
     </div>
 
     <div class="input-group">
-      <input v-model="search_parameter.q" type="text" class="form-control" placeholder="Search for...">
+      <input v-model="search_parameter.q" type="text" class="form-control" placeholder="Search for..."
+             v-on:keyup.enter="search">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" v-on:click="search">搜索</button>
+        <button class="btn btn-default" type="button" v-on:click="search">Search</button>
       </span>
     </div>
 
@@ -37,6 +39,8 @@
           <div id="auction_item">
             <img v-bind:src="getAuctionPhotoUrl(auction.id)" class="img-thumbnail">
             <h5><strong>{{ auction.title }}</strong></h5>
+            <h6>Category Id : {{ auction.categoryId }} </h6>
+            <h6>Category Title : {{ auction.categoryTitle }} </h6>
             <h6>Start     Date : {{ formattedstartDateTime(auction.startDateTime) }} </h6>
             <h6>End       Date : {{ formattedstartDateTime(auction.endDateTime) }} </h6>
             <h6>Reserver Price : ${{ auction.reservePrice}}</h6>
@@ -64,7 +68,6 @@
         errorFlag: false,
         users:[],
         search_parameter:{
-          category_select: -1,
           q:''
         },
         default_category:{categoryId:-1, categoryTitle:"all", categoryDescription:''},
@@ -83,6 +86,7 @@
           //   currentBid:0.01
           // },
         ],
+        category_select: -1,
         checkedNames: "all", // default value
       }
     },
@@ -90,6 +94,10 @@
     watch: {
       checkedNames: function (newCheckNames, oldCheckname) {
         console.log('watch checkedNames newCheckNames"' + newCheckNames + " oldCheckname:" + oldCheckname);
+        this.search();
+      },
+      category_select:function (newCategory, oldCategory) {
+        console.log('watch category_select newCategory"' + newCategory + " oldCategory:" + oldCategory);
         this.search();
       }
     },
@@ -152,7 +160,7 @@
         var params = {}
 
         // 1, category
-        var categoryId = this.search_parameter.category_select;
+        var categoryId = this.category_select;
         if(undefined != categoryId && validator.isNumeric(categoryId.toString()) && parseInt(categoryId) > 0) {
           params['category-id'] = categoryId;
         }
