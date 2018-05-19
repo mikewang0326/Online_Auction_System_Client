@@ -45,7 +45,7 @@
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">ReservePrice</label>
                 <input v-model="auction_info.reservePrice" type="number" class="form-control"
-                       id="reservePrice" step="0.01" placeholder="reserve price" required>
+                       id="reservePrice" step="1" placeholder="reserve price" required>
                 <div v-if="validate_info.reservePrice.enable" class="text-left text-danger">{{ validate_info.reservePrice.error }}</div>
 
               </div>
@@ -53,7 +53,7 @@
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Starting bid</label>
                 <input v-model="auction_info.startingBid" type="number" class="form-control"
-                       id="startingBid" step="0.01" placeholder="starting bid" required>
+                       id="startingBid" step="1" placeholder="starting bid" required>
                 <div v-if="validate_info.startingBid.enable" class="text-left text-danger">{{ validate_info.startingBid.error }}</div>
 
               </div>
