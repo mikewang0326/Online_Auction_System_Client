@@ -107,9 +107,9 @@
         },
 
         auction_info: {
-          title: "Underwater bat suit",
+          title: "Test 1",
           categoryId: 1,
-          description: "A Bat suit to use underwater. Keeps you dry. Sometimes.",
+          description: "Test 1 description",
           startDateTime: "2018-06-17",
           endDateTime: "2018-09-17",
           reservePrice: 1000,
@@ -157,7 +157,7 @@
         };
         axios.post('/auctions/', {
           'title': this.auction_info.title,
-          'categoryId': this.auction_info.categoryId,
+          'categoryId': parseInt(this.auction_info.categoryId.toString()),
           'description': this.auction_info.description,
           'startDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime),
           'endDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime),
