@@ -7,10 +7,17 @@
 
       <button type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#uploadPhotoModal">
-        Click to add a photo
+        Add a photo
       </button>
 
       <div v-if="upload_info.message" class="text-left text-danger">{{ upload_info.message }}</div>
+
+      <button type="button" class="btn btn-primary"
+              data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#deletePhotoModal">
+        Delete current photo
+      </button>
+
+      <div v-if="delete_photo_info.message" class="text-left text-danger">{{ delete_photo_info.message }}</div>
     </div>
 
 
@@ -128,6 +135,42 @@
       </div>
     </div>
 
+    <!-- delete photo -->
+    <div class = "modal fade" id = "deletePhotoModal" tabindex = "-1" role = "dialog"
+         aria-labelledby = "makeBidModalLabel" aria-hidden = "true">
+      <div class = "modal-dialog" role = "document">
+        <div class = "modal-content">
+          <div class = "modal-header">
+            <h5 class = "modal-title" id = "deletePhotoModalLabel" > Delete Photo </h5>
+            <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
+              <span aria-hidden = "true" > &times; </span>
+            </button>
+
+          </div>
+          <div class = "modal-body">
+            Are you sure to delete current photo?
+            <form @submit.prevent="deleteCurrentPhoto">
+
+              <div v-if="auction_info.title" class="text-center text-danger">{{ status_message.content }}</div>
+
+              <div class = "modal-footer">
+                <button type = "submit" class = "btn btn-primary" data-dismiss = "modal" v-on:click="deleteCurrentPhoto" v-bind:disabled="false">
+                  Delete
+                </button>
+                <button type = "button" class = "btn btn-secondary" data-dismiss = "modal">
+                  Cancel
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
 
 
   </div>
@@ -141,6 +184,7 @@
   const auctionDetailResponseHelper = require('../../data/discover/GetAuctionResponseHelper');
   const makeBidResponseHelper = require('../../data/discover/MakeBidResponseHelper');
   const uploadPhotoResponseHelper = require('../../data/discover/UploadPhotoResponseHelper');
+  const deletePhotoResponseHelper = require('../../data/discover/DeletePhotoResponseHelper');
 
   export default {
     name: 'AuctionDetailComponent',
@@ -163,6 +207,10 @@
           message:""
         },
 
+        delete_photo_info:{
+          message:"",
+        },
+
         auction_info: {
           categoryId: '',
           categoryTitle: '',
@@ -183,6 +231,7 @@
         make_bid_amount: 0
       }
     },
+
     mounted: function () {
       this.getAuctionInfo();
     },
@@ -288,6 +337,30 @@
           }
         }).catch((error) => {
           this.upload_info.message = error.toString();
+        });;
+      },
+
+      deleteCurrentPhoto() {
+        console.log('deleteCurrentPhoto()')
+        this.delete_photo_info.message = "Deleting, please wait".toString();
+        let axiosConfig = {
+          headers: {
+            'Content-Type':'application/json',
+            'X-Authorization': userHelper.getUserInfo().token
+          }
+        };
+        console.log('auction_id : ' + this.$route.params.auction_id);
+        console.log(axiosConfig)
+        axios.delete('/auctions/'+ this.$route.params.auction_id +'/photos',
+          axiosConfig).then(response => {
+          console.log(response);
+          if (deletePhotoResponseHelper.isValid(response)) {
+            this.delete_photo_info.message = "";
+          } else {
+            this.delete_photo_info.message = this.deletePhotoResponseHelper.getErrorInfo(response).toString();
+          }
+        }).catch((error) => {
+          this.delete_photo_info.message = error.toString();
         });;
       },
 
