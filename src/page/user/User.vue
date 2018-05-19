@@ -8,6 +8,15 @@
 
     </div>
 
+    <div id="layout_edit_user_info">
+      <button type="button" class="btn btn-primary"
+              data-toggle="modal" v-bind:disabled="!isLoginUser" data-target="#editUserInfoModal">
+        Edit User Information
+      </button>
+      <div v-if="user_edit_info_status" class="text-left text-danger">{{ user_edit_info_status }}</div>
+    </div>
+
+
     <div id="user_basic_info">
       <h4>ID: {{ user.id }}</h4>
       <h4>Token: {{ user.token }}</h4>
@@ -23,12 +32,63 @@
     <div id="bottom_bar" v-if="isLoginUser" class="checkbox" >
       <button v-on:click="logout"  class="btn btn-primary pull-left">Logout</button>
     </div>
+
+
+    <!-- Edit user info-->
+    <div class = "modal fade" id = "editUserInfoModal" tabindex = "-1" role = "dialog"
+         aria-labelledby = "editUserInfoModalLabel" aria-hidden = "true">
+      <div class = "modal-dialog" role = "document">
+        <div class = "modal-content">
+          <div class = "modal-header">
+            <h5 class = "modal-title" id = "makeBidModalLabel" > Edit User Info </h5>
+            <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
+              <span aria-hidden = "true" > &times; </span>
+            </button>
+
+          </div>
+          <div class = "modal-body">
+            Please change your information
+            <form @submit.prevent="prepareForBid">
+              <div class="form-group has-feedback">
+                <label class="cols-sm-2 control-label">Given name</label>
+                <input v-model="user_edit_info.givenName" type="text" class="form-control"
+                       id="edit_info_givenname" step="0.01" placeholder="given name" required>
+
+              </div>
+              <div class="form-group has-feedback">
+                <label class="cols-sm-2 control-label">Family Name</label>
+                <input v-model="user_edit_info.familyName" type="text" class="form-control" id="edit_info_familyname"
+                       placeholder="family name" autofocus required>
+              </div>
+
+              <!--<div v-if="auction_info.title" class="text-center text-danger">{{ status_message.content }}</div>-->
+
+              <div class = "modal-footer">
+                <button type = "submit" class = "btn btn-primary" data-dismiss = "modal" v-on:click="editUserInfo" v-bind:disabled="isSubmitButtonDisable">
+                  Confirm
+                </button>
+                <button type = "button" class = "btn btn-secondary" data-dismiss = "modal">
+                  Cancel
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 <script>
   import axios from '../../axios';
   const userHelper = require('../../utils/UserHelper')
-  const responseHelper = require('../../data/discover/GetUserInfoResponseHelper');
+  const getUserInfoResponseHelper = require('../../data/discover/GetUserInfoResponseHelper');
+  const editUserInfoResponseHelper = require('../../data/user/EditUserResponseHelper');
+  const validator = require('validator');
   export default {
     data () {
       return {
@@ -44,7 +104,16 @@
 
         user_info:{
 
-        }
+        },
+
+        user_edit_info:{
+            givenName:'',
+            familyName:'',
+        },
+        user_edit_info_status:'',
+
+        make_bid_amount:0,
+
       }
     },
 
@@ -55,6 +124,27 @@
     computed: {
       isLoginUser:function(){
         return userHelper.isCurrentUser(this.user_id)
+      },
+
+      isSubmitButtonDisable: function () {
+        let ret = true;
+        if (this.user_edit_info.givenName != this.user_info.givenName
+            || this.user_edit_info.familyName != this.user_info.familyName) {
+          if (!validator.isEmpty(this.user_edit_info.givenName)
+            || !validator.isEmpty(this.user_edit_info.familyName)) {
+            ret = false;
+          }
+        }
+        console.log('computed isSubmitButtonDisable :' + ret);
+        return ret;
+      },
+    },
+
+    watch:{
+      user_info: function (newUserInfo, oldUserInfo) {
+        console.log('watch checkedNames newUserInfo"' + newUserInfo + " oldUserInfo:" + oldUserInfo);
+        this.user_edit_info.givenName = newUserInfo.givenName;
+        this.user_edit_info.familyName = newUserInfo.familyName;
       },
     },
 
@@ -96,14 +186,49 @@
           .then((response) => {
             console.log(response)
             this.status_message.content = "".toString()
-            if (responseHelper.isValid(response)) {
+            if (getUserInfoResponseHelper.isValid(response)) {
               this.user_info = response['data'];
             } else {
-              this.status_message.content = this.responseHelper.getErrorInfo(response).toString();
+              this.status_message.content = this.getUserInfoResponseHelper.getErrorInfo(response).toString();
             }
           }).catch((error) => {
           this.status_message.content = error.toString();
         });
+      },
+
+      editUserInfo: function () {
+        console.log("editUserInfo : " + this.editUserInfo);
+        this.user_edit_info_status = "Now editing, please wait".toString();
+        let axiosConfig = {
+          headers: {
+            'Content-Type':'application/json',
+            'X-Authorization': userHelper.getUserInfo().token
+          }
+        };
+
+        let data = {};
+        if (!validator.isEmpty(this.user_edit_info.givenName)) {
+          data.givenName = this.user_edit_info.givenName;
+        }
+
+        if (!validator.isEmpty(this.user_edit_info.familyName)) {
+          data.familyName = this.user_edit_info.familyName;
+        }
+
+        axios.patch('/users/' + this.user_id, data, axiosConfig)
+          .then((response) => {
+            console.log(response)
+            if (editUserInfoResponseHelper.isValid(response)) {
+              this.user_edit_info_status = "";
+              this.getUserInfo();
+            } else {
+              this.user_edit_info_status = editUserInfoResponseHelper.getErrorInfo(response).toString();
+            }
+
+          })
+          .catch((error) => {
+            this.user_edit_info_status = error.toString();
+          });
       },
 
       logout: function () {
@@ -156,7 +281,7 @@
     padding: 10px 10px 10px 10px;
   }
 
-  #handle_auction_layout{
+  #layout_edit_user_info{
     background-color: khaki;
     margin: 10px 10px 10px 10px;
     padding: 10px 10px 10px 10px;
