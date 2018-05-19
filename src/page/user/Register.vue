@@ -29,7 +29,7 @@
               <!-- email -->
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Email</label>
-                <input v-model="register_info.email" type="email" class="form-control"
+                <input v-model="register_info.email" type="email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" class="form-control"
                        id="email" placeholder="email" required>
               </div>
               <!-- password -->

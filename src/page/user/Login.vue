@@ -37,6 +37,7 @@
   import axios from '../../axios'
   const userHelper = require('../../utils/UserHelper')
   const responseHelper = require('../../data/user/LoginResponseHelper');
+  const validator = require('validator');
 
   export default {
     name: 'LoginComponent',
@@ -66,10 +67,21 @@
       submitLogin: function () {
 
         this.status_message.content = "Now logining, please wait".toString();
-        axios.post('/users/login', {
-          'email': this.login_info.username_or_email,
-          'password': this.login_info.password
-        })
+
+        let data = {};
+        if (validator.isEmail(this.login_info.username_or_email.toString())) {
+          data = {
+            'email': this.login_info.username_or_email,
+            'password': this.login_info.password
+          }
+        } else {
+          data = {
+            'username': this.login_info.username_or_email,
+            'password': this.login_info.password
+          }
+        }
+
+        axios.post('/users/login', data)
           .then((response) => {
             // if login succeed, save token, and return to user page
             if (responseHelper.isLoginSucceed(response)) {
