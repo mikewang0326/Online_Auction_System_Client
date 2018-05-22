@@ -236,6 +236,29 @@
       this.getAuctionInfo();
     },
 
+    beforeRouteEnter:function(to, from, next){
+      console.log("beforeRouteEnter before to.params.auction_id " + to.params.auction_id );
+      if (undefined == to.params.auction_id) {
+        to.params.auction_id = to.meta.auction_id;
+      }
+
+      console.log("beforeRouteEnter after to.params.auction_id " + to.params.auction_id );
+
+      next();
+    },
+
+    beforeRouteLeave:function(to, from, next){
+      console.log("beforeRouteLeave before from.meta.auction_id " + from.meta.auction_id);
+      if (to.fullPath == '/create_auction' || to.fullPath == '/user') {
+        from.meta.auction_id = this.$route.params.auction_id;
+      } else if (to.fullPath == '/' || to.fullPath == '/discover' || to.fullPath == '/auction_list') {
+        from.meta.auction_id = ''
+      }
+
+      console.log("beforeRouteLeave after from.meta.auction_id " + from.meta.auction_id );
+      next();
+    },
+
     computed: {
       minBidAmount:function() {
         let ret = this.auction_info.startingBid;
@@ -371,7 +394,8 @@
 
       getAuctionInfo: function () {
         this.status_message.content = "Now is loading, please wait...".toString();
-        var auction_id = this.$route.params.auction_id;
+        let auction_id = this.$route.params.auction_id;
+
         console.log("auction_id : " + auction_id);
         axios.get("http://localhost:4941/api/v1/auctions/" + auction_id)
           .then((response) => {

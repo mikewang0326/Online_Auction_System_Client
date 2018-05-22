@@ -36,7 +36,11 @@ const routes = [
   {
     path: "/auction_detail",
     name:"auction_detail",
-    component: AuctionDetail
+    component: AuctionDetail,
+    meta:{
+      auction_id:''
+    }
+
   },
   {
     path: "/create_auction",
