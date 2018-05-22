@@ -192,7 +192,7 @@
               this.status_message.content = this.getUserInfoResponseHelper.getErrorInfo(response).toString();
             }
           }).catch((error) => {
-          this.status_message.content = error.toString();
+          this.status_message.content = 'Get user information failed, please try again !' .toString();
         });
       },
 
@@ -227,7 +227,7 @@
 
           })
           .catch((error) => {
-            this.user_edit_info_status = error.toString();
+            this.user_edit_info_status = 'Edit user information failed, please try again !' .toString();
           });
       },
 
