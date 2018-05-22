@@ -10,13 +10,13 @@
         Add a photo
       </button>
 
-      <div v-if="upload_info.message" class="text-left text-danger">{{ upload_info.message }}</div>
 
       <button type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#deletePhotoModal">
         Delete current photo
       </button>
 
+      <div v-if="upload_info.message" class="text-left text-danger">{{ upload_info.message }}</div>
       <div v-if="delete_photo_info.message" class="text-left text-danger">{{ delete_photo_info.message }}</div>
     </div>
 
@@ -336,7 +336,7 @@
             this.upload_info.message = this.uploadPhotoResponseHelper.getErrorInfo(response).toString();
           }
         }).catch((error) => {
-          this.upload_info.message = error.toString();
+          this.upload_info.message = "Upload photo failed, please try again !".toString();
         });;
       },
 
@@ -355,12 +355,13 @@
           axiosConfig).then(response => {
           console.log(response);
           if (deletePhotoResponseHelper.isValid(response)) {
+            this.photoUrl = this.createReplaceablePhotoUrl();
             this.delete_photo_info.message = "";
           } else {
             this.delete_photo_info.message = this.deletePhotoResponseHelper.getErrorInfo(response).toString();
           }
         }).catch((error) => {
-          this.delete_photo_info.message = error.toString();
+          this.delete_photo_info.message = "Delete photo failed, please try again !".toString();
         });;
       },
 
