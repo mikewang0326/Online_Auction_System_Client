@@ -183,7 +183,7 @@
             }
           })
           .catch((error) => {
-            this.status_message.content = error.toString();
+            this.status_message.content = "Create auction failed".toString();
           });
       },
 
@@ -225,7 +225,7 @@
             }
           })
           .catch((error) => {
-            this.status_message.content = error.toString();
+            this.status_message.content = "Update auction failed.".toString();
           });
       },
 
