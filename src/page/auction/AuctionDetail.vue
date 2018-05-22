@@ -410,7 +410,7 @@
 
           })
           .catch((error) => {
-            this.status_message.content = error.toString();
+            this.status_message.content = "Make a bid failed, please try it again!";
           });
       },
 
