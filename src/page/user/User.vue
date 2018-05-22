@@ -8,7 +8,7 @@
 
     </div>
 
-    <div id="layout_edit_user_info">
+    <div v-if="isLoginUser" id="layout_edit_user_info">
       <button type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="!isLoginUser" data-target="#editUserInfoModal">
         Edit User Information
