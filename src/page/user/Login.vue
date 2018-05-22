@@ -97,7 +97,7 @@
 
           })
           .catch((error) => {
-            this.status_message.content = error.toString();
+            this.status_message.content = "Login failed : invalid username/email/password supplied".toString();
           });
       },
 
