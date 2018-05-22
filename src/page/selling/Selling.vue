@@ -2,6 +2,9 @@
   <div>
     <h3 id="title_bar">Selling Page</h3>
 
+    <div id="login_reminder_layout" v-if="isNotLogin" class="text-left text-danger">{{ "Before you view any autcions, please login in first !" }}</div>
+
+
     <div id="arrow_button_layout">
       <button type="button" class="btn btn-warning btn-arrow-right" v-on:click="createAuction" >Create an auction</button>
     </div>
@@ -43,21 +46,47 @@
     mounted: function () {
     },
 
+    computed:{
+      isNotLogin:function () {
+        return !userHelper.isLogin();
+      }
+    },
+
     methods: {
       createAuction: function () {
-        this.$router.push({ name: 'create_auction', params: { event: 'create_auction'}});
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'create_auction', params: { event: 'create_auction'}});
+        } else {
+          this.$router.push('/user/login');
+        }
       },
       viewAllAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'all'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'all'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
       viewActiveAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'active'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'active'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
       viewExpiredAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'expired'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'expired'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
       viewUpcomingAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'upcoming'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { seller: userHelper.getUserInfo().id, status:'upcoming'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
 
     }
@@ -92,6 +121,12 @@
     background-color: khaki;
     margin: 10px 10px 10px 10px;
     padding: 20px 20px 20px 20px;
+  }
+
+  #login_reminder_layout{
+    background-color: khaki;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
   }
 
   #auction_bid_history{

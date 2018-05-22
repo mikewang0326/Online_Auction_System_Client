@@ -2,6 +2,8 @@
   <div id="buying_page">
     <h3 id="title_bar">Buying Page</h3>
 
+    <div id="login_reminder_layout" v-if="isNotLogin" class="text-left text-danger">{{ "Before you view any autcions, please login in first !" }}</div>
+
     <div id="view_auction_options">
 
       <div class="create_auction_layout">
@@ -35,21 +37,43 @@
     mounted: function () {
     },
 
+    computed:{
+      isNotLogin:function () {
+        return !userHelper.isLogin();
+      }
+    },
+
     methods: {
       viewAllAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'all'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'all'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
 
       viewWonAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { winner: userHelper.getUserInfo().id, status:'all'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { winner: userHelper.getUserInfo().id, status:'won'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
 
       viewActiveAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'active'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'active'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
 
       viewExpiredAuctions: function () {
-        this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'expired'}})
+        if (userHelper.isLogin()) {
+          this.$router.push({ name: 'auction_list', params: { bidder: userHelper.getUserInfo().id, status:'expired'}})
+        } else {
+          this.$router.push('/user/login');
+        }
       },
 
     }
@@ -75,7 +99,7 @@
     padding: 10px 10px 10px 10px;
   }
 
-  #user_basic_info{
+  #login_reminder_layout{
     background-color: khaki;
     margin: 10px 10px 10px 10px;
     padding: 10px 10px 10px 10px;
