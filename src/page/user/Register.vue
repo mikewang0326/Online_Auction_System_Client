@@ -99,7 +99,7 @@
             }
           })
           .catch((error) => {
-            this.status_message.content = error.toString();
+            this.status_message.content = "Register failed, please check your information.".toString();
           });
       }
     }
