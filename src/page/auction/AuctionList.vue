@@ -54,7 +54,7 @@
     },
 
     mounted: function () {
-      this.search();
+      this.handleSearch();
     },
 
     computed: {
@@ -79,6 +79,14 @@
     },
 
     methods: {
+      handleSearch:function() {
+           if (this.$route.params['status'] == 'won') {
+             this.searchWon()
+           } else {
+             this.search()
+           }
+      },
+
       formattedstartDateTime:function(millseconds){
         return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
       },
@@ -100,7 +108,31 @@
               this.status_message.content = responseHelper.getErrorInfo(response)
             }
           }, function (error) {
-            this.status_message.content = error;
+            this.status_message.content = "Search error, please try again !".toString();
+          })
+      },
+
+      searchWon: function () {
+        console.log(this.getSearchParameters());
+        this.status_message.content = "Now is searching, please wait...".toString();
+        let axiosConfig = {
+          headers: {
+            'Content-Type':'application/json',
+            'X-Authorization': userHelper.getUserInfo().token
+          }
+        };
+        this.$http.get("http://localhost:4941/api/v1/my_won_auctions", axiosConfig)
+          .then((response) => {
+            console.log(response)
+            this.status_message.content = "".toString()
+            if (responseHelper.isValid(response)) {
+              this.auctions = response['data'];
+            } else {
+              console.log("xxxxx");
+              this.status_message.content = responseHelper.getErrorInfo(response)
+            }
+          }, function (error) {
+            this.status_message.content = "Search error, please try again !".toString();
           })
       },
 
