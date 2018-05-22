@@ -18,8 +18,8 @@
 
 
     <div id="user_basic_info">
-      <h4>ID: {{ user.id }}</h4>
-      <h4>Token: {{ user.token }}</h4>
+      <!--<h4>ID: {{ user.id }}</h4>-->
+      <!--<h4>Token: {{ user.token }}</h4>-->
 
       <h4>Username: {{ user_info.username }}</h4>
       <h4>Given name: {{ user_info.givenName }}</h4>
