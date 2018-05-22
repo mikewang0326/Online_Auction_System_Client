@@ -121,6 +121,14 @@
     mounted: function () {
        this.init();
     },
+
+    beforeRouteLeave:function(to, from, next) {
+      if (to.fullPath == '/auction_detail') {
+        to.meta.keepAlive = true;
+      }
+      next();
+    },
+
     methods: {
       init:function(){
         var event_name = this.$route.params.event;
@@ -197,7 +205,7 @@
         let auction_id = this.$route.params.auction_id;
         let data = {
           'title': this.auction_info.title,
-          'categoryId': this.auction_info.categoryId,
+          'categoryId': parseInt(this.auction_info.categoryId),
           'description': this.auction_info.description,
           'startDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime),
           'endDateTime': timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime),
