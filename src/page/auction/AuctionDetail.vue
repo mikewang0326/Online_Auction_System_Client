@@ -2,16 +2,16 @@
   <div id="auction_detail">
     <h3 id="title_bar">Auction Detail Page</h3>
     <div v-if="status_message.content" class="text-left text-danger">{{ status_message.content }}</div>
-    <div id="div_upload_photo">
+    <div  id="div_upload_photo">
       <img v-bind:src="photoUrl" class="img-thumbnail">
 
-      <button type="button" class="btn btn-primary"
-              data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#uploadPhotoModal">
+      <button v-if="isEditButtonDisable == false" type="button" class="btn btn-primary"
+              data-toggle="modal" :disabled="isEditButtonDisable" data-target="#uploadPhotoModal">
         Add a photo
       </button>
 
 
-      <button type="button" class="btn btn-primary"
+      <button v-if="isEditButtonDisable == false" type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isEditButtonDisable" data-target="#deletePhotoModal">
         Delete current photo
       </button>
@@ -33,7 +33,7 @@
     </div>
 
     <div id="auction_bid_history">
-      <button v-bind:disabled="isBidHistoryButtonDisable" type="button" class="btn btn-primary" data-toggle="collapse"
+      <button v-if="isBidHistoryButtonDisable == false" v-bind:disabled="isBidHistoryButtonDisable" type="button" class="btn btn-primary" data-toggle="collapse"
               data-target="#demo">
         Click to view all bid histories
       </button>
@@ -47,11 +47,11 @@
     </div>
 
     <div id="handle_auction_layout">
-      <button type="button" class="btn btn-primary"
+      <button v-if="isBidButtonDisable == false" type="button" class="btn btn-primary"
               data-toggle="modal" v-bind:disabled="isBidButtonDisable" data-target="#makeBidModal">
         Bid
       </button>
-      <button v-bind:disabled="isEditButtonDisable" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
+      <button v-if="isEditButtonDisable == false" v-bind:disabled="isEditButtonDisable" type="button" class="btn btn-primary" v-on:click="goToAuctionEditPage">
         Edit
       </button>
     </div>
@@ -279,7 +279,7 @@
 
       isSubmitButtonDisable: function () {
         let ret = true;
-        if (this.make_bid_amount > this.auction_info.currentBid) {
+        if (this.make_bid_amount > this.auction_info.currentBid && this.make_bid_amount > this.auction_info.startingBid) {
           ret = false;
         }
 
