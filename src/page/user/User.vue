@@ -192,7 +192,11 @@
               this.status_message.content = this.getUserInfoResponseHelper.getErrorInfo(response).toString();
             }
           }).catch((error) => {
-          this.status_message.content = 'Get user information failed, please try again !' .toString();
+           if (error.toString().includes('401') != -1) {
+             this.status_message.content = 'Please login first to view user\'s information!' .toString();
+           } else {
+             this.status_message.content = 'Get user information failed, please try again !' .toString();
+           }
         });
       },
 
