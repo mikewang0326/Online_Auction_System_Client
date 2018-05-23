@@ -30,7 +30,7 @@
 
 
     <div id="bottom_bar" v-if="isLoginUser" class="checkbox" >
-      <button v-on:click="logout"  class="btn btn-primary pull-left">Logout</button>
+      <button v-if="false" v-on:click="logout"  class="btn btn-primary pull-left">Logout</button>
     </div>
 
 

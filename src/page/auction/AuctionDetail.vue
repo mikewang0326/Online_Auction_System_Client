@@ -287,13 +287,11 @@
         return ret;
       },
 
-      isBidButtonDisable:function () {
+      isBidButtonDisable: function () {
         let ret = true;
-        if(!userHelper.isCurrentUser(this.auction_info.seller.id)) {
-          if (timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime) < new Date().getTime()
-            && timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime) > new Date().getTime()) {
-            ret = false;
-          }
+        if (timeHelper.convertFormattedTimeToMillseconds(this.auction_info.startDateTime) < new Date().getTime()
+          && timeHelper.convertFormattedTimeToMillseconds(this.auction_info.endDateTime) > new Date().getTime()) {
+          ret = false;
         }
 
         console.log('computed isBidButtonDisable :' + ret);

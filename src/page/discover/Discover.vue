@@ -1,6 +1,5 @@
 <template>
   <div id="discover">
-
     <div id="category_bar">
       <span>Auction Category: {{  }}</span>
       <select v-model="category_select">
@@ -109,10 +108,6 @@
 
 
     methods: {
-      onStatusOptionSelected:function(status) {
-        alert(status);
-      },
-
       formattedstartDateTime:function(millseconds){
         return timeHelper.convertMillsecondsToFormattedTimeYMDHMS(millseconds);
       },
@@ -224,7 +219,6 @@
   }
 
   #layout_auction_status_option{
-
     background-color: khaki;
   }
 
