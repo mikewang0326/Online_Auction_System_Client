@@ -57,6 +57,28 @@
       this.handleSearch();
     },
 
+    beforeRouteEnter: function (to, from, next) {
+      if (undefined == to.params.status) {
+        for (var key in to.meta.params) {
+          to.params[key] = to.meta.params[key];
+        }
+      }
+
+      next();
+    },
+
+    beforeRouteLeave: function (to, from, next) {
+      if (to.fullPath == '/auction_detail') {
+        for (var key in from.params) {
+          from.meta.params[key] = from.params[key];
+        }
+      } else if (to.fullPath == '/selling' || to.fullPath == '/buying') {
+        from.meta.params = {};
+      }
+
+      next();
+    },
+
     computed: {
       pageTitle:function(){
         let ret = "Auction List Page";
