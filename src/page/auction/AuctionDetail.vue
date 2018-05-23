@@ -74,7 +74,7 @@
               <div class="form-group has-feedback">
                 <label class="cols-sm-2 control-label">Bid you will make</label>
                 <input v-model="make_bid_amount" type="number" class="form-control"
-                       id="number" step="0.01" placeholder="Please make a bid" required>
+                       id="number" step="1" placeholder="Please make a bid" required>
               </div>
               <div v-if="auction_info.title" class="text-center text-danger">{{ status_message.content }}</div>
 
