@@ -24,7 +24,7 @@
             </form>
 
             <div class="checkbox">
-              <button class="btn btn-primary pull-left" v-on:click="submitRegister">Sign Up</button>
+              <button class="btn btn-primary pull-left" v-on:click="submitRegister">Register</button>
             </div>
           </div>
         </div>
