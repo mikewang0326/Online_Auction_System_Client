@@ -145,7 +145,7 @@
               this.status_message.content = responseHelper.getErrorInfo(response)
             }
           }, function (error) {
-             this.status_message.content = error;
+             this.status_message.content = "Search error, please try it again".toString();
           })
       },
 
