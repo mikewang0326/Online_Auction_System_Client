@@ -20,7 +20,7 @@
       </div>
 
       <div class="arrow_button_layout">
-        <button type="button" class="btn btn-warning btn-arrow-right" v-on:click="viewExpiredAuctions" >View Expired auctions</button>
+        <button type="button" class="btn btn-warning btn-arrow-right" v-on:click="viewExpiredAuctions" >View expired auctions</button>
       </div>
 
       <div class="arrow_button_layout">
